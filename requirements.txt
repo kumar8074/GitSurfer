@@ -11,6 +11,7 @@ langgraph
 langgraph-sdk
 langgraph-cli[inmem]
 langsmith
+gitpython
 requests
 crawl4ai
 beautifulsoup4

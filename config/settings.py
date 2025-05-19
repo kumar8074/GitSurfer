@@ -40,6 +40,7 @@ GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 # Set environment variables for libraries
 if GEMINI_API_KEY:
@@ -61,6 +62,9 @@ ANTHROPIC_LLM_MODEL = os.getenv("ANTHROPIC_LLM_MODEL", "claude-3-sonnet-20240229
 # Model settings - Cohere
 COHERE_EMBEDDING_MODEL = os.getenv("COHERE_EMBEDDING_MODEL", "embed-english-v3.0")
 COHERE_LLM_MODEL = os.getenv("COHERE_LLM_MODEL", "command")
+
+# Temporary directory for retrieved tree stucture and raw chunks
+TEMP_DIR = os.getenv("TEMP_DIR", "temp")
 
 # Database settings
 CHROMA_PERSIST_DIRECTORY = os.getenv("CHROMA_PERSIST_DIRECTORY", "DATA/chroma_store")

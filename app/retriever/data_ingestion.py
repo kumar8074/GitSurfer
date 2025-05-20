@@ -1,10 +1,11 @@
 # ===================================================================================
 # Project: GitSurfer
-# File: app/core/data_ingestion.py
-# Description: This file Loads the data from JSON files and store it in a VectorStoreDB (Defaults to CHROMA)
+# File: app/retriever/data_ingestion.py
+# Description: This file loads data from JSON files, stores it in a VectorStoreDB (Defaults to CHROMA),
+#              and provides retriever functionality for the stored data.
 # Author: LALAN KUMAR
 # Created: [19-05-2025]
-# Updated: [19-05-2025]
+# Updated: [20-05-2025]
 # LAST MODIFIED BY: LALAN KUMAR [https://github.com/kumar8074]
 # Version: 1.0.0
 # ===================================================================================
@@ -15,6 +16,7 @@ import argparse
 import json
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
+from langchain_core.documents import Document
 
 # Add root path
 current_file_path = os.path.abspath(__file__)
@@ -26,7 +28,7 @@ if project_root not in sys.path:
 from logger import logging
 from config import settings
 from app.core.embeddings import get_embeddings
-
+from typing import Optional
 
 def flatten_tree(tree, parent_path=""):
     """Recursively flatten the tree_summary.json into a path → metadata dict."""
@@ -69,7 +71,6 @@ def load_json_files(chunks_path, tree_path):
 
 def prepare_documents(file_chunks, tree_metadata=None):
     """Convert to LangChain Document objects, merging metadata from tree_summary.json if available."""
-    from langchain_core.documents import Document
     documents = []
     for chunk in file_chunks:
         path = chunk.get("path", "")
@@ -102,10 +103,57 @@ def persist_vector_db(docs, embeddings, persist_directory):
         persist_directory=persist_directory
     )
     logging.info(f"VectorDB persisted at: {persist_directory}")
+    return vectordb
+
+def create_retriever(vectordb=None, persist_directory=None, embedding_provider=None):
+    """Create a retriever from a vector store or load an existing one.
+    
+    Args:
+        vectordb: An existing vector store instance. If provided, other parameters are ignored.
+        persist_directory: Directory where the vector store is persisted. If None, uses default location.
+        embedding_provider: The embedding provider to use. If None, uses the default from settings.
+        
+    Returns:
+        A retriever instance ready for querying.
+    """
+    # If no vector store is provided, load an existing one
+    if vectordb is None:
+        provider = embedding_provider or settings.EMBEDDING_PROVIDER
+        if persist_directory is None:
+            persist_directory = f"DATA/chroma_store_{provider.lower()}"
+        
+        # Create directory if it doesn't exist
+        os.makedirs(persist_directory, exist_ok=True)
+        
+        # Get the appropriate embeddings based on the provider
+        embeddings = get_embeddings(provider)
+        
+        # Load the existing vector store
+        vectordb = Chroma(
+            persist_directory=persist_directory,
+            embedding_function=embeddings
+        )
+    
+    # Check if the vector store has documents
+    collection_count = vectordb._collection.count()
+    if collection_count == 0:
+        logging.warning(f"Vector store is empty for provider {embedding_provider or settings.EMBEDDING_PROVIDER}")
+    else:
+        logging.info(f"Vector store loaded successfully with {collection_count} documents")
+    
+    # Return the retriever interface
+    return vectordb.as_retriever(search_kwargs={"k": 5})
 
 
 def main(embedding_provider=None):
-    """Main function to ingest data from temp/chunks_raw.json and tree_summary.json, with optional provider specification."""
+    """Main function to ingest data from temp/chunks_raw.json and tree_summary.json, and return a retriever.
+    
+    Args:
+        embedding_provider: Optional provider name to use (defaults to settings.EMBEDDING_PROVIDER)
+        
+    Returns:
+        A retriever instance ready to use for querying the vector store
+    """
     # Use the specified provider or default from settings
     provider = embedding_provider or settings.EMBEDDING_PROVIDER
     logging.info(f"Using embedding provider: {provider}")
@@ -131,7 +179,12 @@ def main(embedding_provider=None):
     os.makedirs(persist_directory, exist_ok=True)
 
     logging.info(f"Persisting vectorDB to {persist_directory}...(This might take a while)")
-    persist_vector_db(docs, embeddings, persist_directory)
+    vectordb = persist_vector_db(docs, embeddings, persist_directory)
+    
+    # Create and return a retriever from the vector store
+    retriever = create_retriever(vectordb)
+    logging.info("Retriever created successfully")
+    return retriever
 
 
 def ingest_all_providers():
@@ -156,6 +209,7 @@ def ingest_all_providers():
                 logging.error(f"Error processing data for {provider}: {str(e)}")
         else:
             logging.warning(f"Skipping {provider} - API key not found")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ingest data for vector stores")

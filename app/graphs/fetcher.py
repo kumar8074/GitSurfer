@@ -192,23 +192,23 @@ def create_fetcher_graph():
     return fetcher_graph
 
 # Create the graph instance
-fetcher_graph = create_fetcher_graph()
+#fetcher_graph = create_fetcher_graph()
 
 
 # Example usage:
-initial_state = FetchState(
-    owner="kumar8074", 
-    repo="NOVA-AI", 
-    branch="main"
-)
+#initial_state = FetchState(
+#    owner="kumar8074", 
+#    repo="NOVA-AI", 
+#    branch="main"
+#)
 
-logging.info("Starting repository analysis...")
-result = asyncio.run(fetcher_graph.ainvoke(initial_state))
+#logging.info("Starting repository analysis...")
+#result = asyncio.run(fetcher_graph.ainvoke(initial_state))
         
 # The result will contain the final state with all the data
-logging.info("Analysis completed successfully!")
-logging.info(f"Total files processed: {len(result['files'])}")
+#logging.info("Analysis completed successfully!")
+#logging.info(f"Total files processed: {len(result['files'])}")
         
 # Access other data from the result
-logging.info(f"Repository structure summary saved to {TEMP_DIR}/tree_summary.json")
-logging.info(f"Raw file contents saved to {TEMP_DIR}/chunks_raw.json")
+#logging.info(f"Repository structure summary saved to {TEMP_DIR}/tree_summary.json")
+#logging.info(f"Raw file contents saved to {TEMP_DIR}/chunks_raw.json")

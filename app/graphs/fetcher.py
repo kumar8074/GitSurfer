@@ -4,7 +4,7 @@
 # Description: This file contains the implementation of Fetcher sub-Graph.
 # Author: LALAN KUMAR
 # Created: [19-05-2025]
-# Updated: [19-05-2025]
+# Updated: [22-05-2025]
 # LAST MODIFIED BY: LALAN KUMAR [https://github.com/kumar8074]
 # Version: 1.0.0
 # ===================================================================================
@@ -89,8 +89,8 @@ async def summarize_tree_structure(
     
     # Get LLM instance with config
     llm = get_llm(
-        streaming=config.get("streaming", False) if config else False,
-        callbacks=config.get("callbacks", []) if config else []
+        streaming=config.get("streaming", False),
+        callbacks=config.get("callbacks", [])
     )
     
     # Prepare the prompt

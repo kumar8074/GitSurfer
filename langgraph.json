@@ -1,0 +1,12 @@
+{
+    "dependencies": [
+      "."
+    ],
+    "graphs": {
+      "git_assistant": "./app/graphs/git_assistant.py:create_git_assistant_graph",
+      "embedder": "./app/graphs/embedder.py:create_embedder_graph",
+      "researcher": "./app/graphs/researcher.py:create_researcher_graph",
+      "fetcher": "./app/graphs/fetcher.py:create_fetcher_graph"
+    },
+    "env": "./.env"
+}

@@ -367,7 +367,7 @@ def create_git_assistant_graph():
         check_query_collected,
         {
             "create_research_plan": "create_research_plan",
-            "collect_user_query": "collect_user_query"
+            #"collect_user_query": "collect_user_query"
         }
     )
 
@@ -407,7 +407,7 @@ async def interactive_main():
     graph = create_git_assistant_graph()
 
     initial_state = AgentState(
-        github_url="https://github.com/kumar8074/NOVA-AI"
+        github_url="https://github.com/kumar8074/HyperSpectral-AI"
     )
 
     config = {"thread_id": "conversation-1"}

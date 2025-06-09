@@ -1,5 +1,5 @@
 .env
 __pycache__/
 logs/
+DATA/chroma_store_gemini/
 temp/
-DATA/

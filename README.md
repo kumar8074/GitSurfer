@@ -14,6 +14,28 @@ GitSurfer is an intelligent, multi-provider codebase analysis and research assis
 - **Rich logging and error handling**
 
 ---
+## Graphs
+
+<table>
+  <tr>
+    <td align="center">
+      <img width="472" src="https://github.com/user-attachments/assets/c100b7ea-5a28-41c8-9f2e-ea7b95698e59" /><br/>
+      <b>Embedder sub-Graph</b>
+    </td>
+    <td align="center">
+      <img width="304" src="https://github.com/user-attachments/assets/a8aab2b0-41f5-4a8a-98f8-ce47ce708d79" /><br/>
+      <b>Fetcher sub-Graph</b>
+    </td>
+    <td align="center">
+      <img width="294" src="https://github.com/user-attachments/assets/8308fd88-e8a4-431a-8ed4-3ac4d601c35e" /><br/>
+      <b>GitSurfer main Graph</b>
+    </td>
+  </tr>
+</table>
+
+---
+
+
 
 ## Project Structure
 ```
